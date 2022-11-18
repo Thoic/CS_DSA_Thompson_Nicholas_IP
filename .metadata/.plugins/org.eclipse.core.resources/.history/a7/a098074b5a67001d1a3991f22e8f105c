@@ -625,7 +625,6 @@ public class Thompson_Nicholas_IP_Task5b {
                 }
                 case "16": {// Import: enter new employees from a data file until the file is empty (the user must be asked to enter the input file name);
                 	System.out.println("NOTE: file must be a csv (delimited with semicolon) with the following attributes: type, name, address, salary, product_type, max_products_per_day, technical_position, degrees");
-                	System.out.println("NOTE: the file must include a value for all attributes, even if the employee doesn't use them (i.e. product_type for a worker).");
                 	System.out.println("Please enter the filename to read new employees from:");
                 	final String filename = sc.nextLine();
                 	
@@ -647,47 +646,37 @@ public class Thompson_Nicholas_IP_Task5b {
                 		 while ((line = bufferedReader.readLine()) != null) {
                 			 String[] values = line.split(","); //split the line by comma
                 			 
-                			 //read employee attributes into a hashmap
                 			 HashMap<String, Object> employee = new HashMap<>();
                 			 employee.put("type", Integer.parseInt(values[0]));
                 			 employee.put("name", values[1]);
                 			 employee.put("address", values[2]);
-                			 employee.put("salary", Float.parseFloat(values[3]));
-                			 employee.put("product_type", values[4]);
-                			 employee.put("max_products_per_day", Integer.parseInt(values[5]));
-                			 employee.put("technical_position", values[6]);
-                			 employee.put("degrees", values[7]);
+                			 empl
+                			 final String name = values[1];
                 			 
-                			 //add the employee hashmap to the employees list
-                			 employees.add(employee);
+                			 System.out.println("Connecting to the database...");
+                             // Get a database connection and prepare a query statement
+                             try (final Connection connection = DriverManager.getConnection(URL)) {
+                                 try (
+                                     final PreparedStatement statement = connection.prepareStatement(QUERY_TEMPLATE_1)) {
+                                     // Populate the query template with the data collected from the csv
+                                 	//"EXEC ip_query1 @type = ?, @name = ?, @address = ?, @salary = ?, @product_type = ?, @max_products_per_day = ?, @technical_position = ?, @degrees = ?";
+                                     statement.setInt(1, type);
+                                     statement.setString(2, name);
+                                     statement.setString(3, address);
+                                     statement.setFloat(4, salary);
+                                     statement.setString(5, product_type);
+                                     statement.setInt(6, max_products_per_day);
+                                     statement.setString(7, technical_position); 
+                                     statement.setString(8, degrees);
+
+                                     System.out.println("Dispatching the query...");
+                                     // Actually execute the populated query
+                                     final int rows_inserted = statement.executeUpdate();
+                                     System.out.println(String.format("Done. %d rows inserted.", rows_inserted));
+                                 }
+                             }
                 		 }
                 	}
-                	
-                	System.out.println("Connecting to the database...");
-                    // Get a database connection and prepare a query statement
-                    try (final Connection connection = DriverManager.getConnection(URL)) {
-                        try (final PreparedStatement statement = connection.prepareStatement(QUERY_TEMPLATE_1)) {
-                        	
-                        	// for each employee, execute query 1
-                        	for (var emp : employees) {
-                                // Populate the query template with the data collected from the csv
-                            	//"EXEC ip_query1 @type = ?, @name = ?, @address = ?, @salary = ?, @product_type = ?, @max_products_per_day = ?, @technical_position = ?, @degrees = ?";
-//                                statement.setInt(1, type);
-//                                statement.setString(2, name);
-//                                statement.setString(3, address);
-//                                statement.setFloat(4, salary);
-//                                statement.setString(5, product_type);
-//                                statement.setInt(6, max_products_per_day);
-//                                statement.setString(7, technical_position); 
-//                                statement.setString(8, degrees);
-
-                                System.out.println("Dispatching the query...");
-                                // Actually execute the populated query
-                                final int rows_inserted = statement.executeUpdate();
-                                System.out.println(String.format("Done. %d rows inserted.", rows_inserted));
-                        	}
-                        }
-                    }
                 }
                 case "18": // Do nothing, the while loop will terminate upon the next iteration
                     System.out.println("Exiting! Goodbye!");

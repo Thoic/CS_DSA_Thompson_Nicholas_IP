@@ -668,18 +668,17 @@ public class Thompson_Nicholas_IP_Task5b {
                     try (final Connection connection = DriverManager.getConnection(URL)) {
                         try (final PreparedStatement statement = connection.prepareStatement(QUERY_TEMPLATE_1)) {
                         	
-                        	// for each employee, execute query 1
                         	for (var emp : employees) {
                                 // Populate the query template with the data collected from the csv
                             	//"EXEC ip_query1 @type = ?, @name = ?, @address = ?, @salary = ?, @product_type = ?, @max_products_per_day = ?, @technical_position = ?, @degrees = ?";
-//                                statement.setInt(1, type);
-//                                statement.setString(2, name);
-//                                statement.setString(3, address);
-//                                statement.setFloat(4, salary);
-//                                statement.setString(5, product_type);
-//                                statement.setInt(6, max_products_per_day);
-//                                statement.setString(7, technical_position); 
-//                                statement.setString(8, degrees);
+                                statement.setInt(1, type);
+                                statement.setString(2, name);
+                                statement.setString(3, address);
+                                statement.setFloat(4, salary);
+                                statement.setString(5, product_type);
+                                statement.setInt(6, max_products_per_day);
+                                statement.setString(7, technical_position); 
+                                statement.setString(8, degrees);
 
                                 System.out.println("Dispatching the query...");
                                 // Actually execute the populated query

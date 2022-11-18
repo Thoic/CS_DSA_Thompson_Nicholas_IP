@@ -666,26 +666,26 @@ public class Thompson_Nicholas_IP_Task5b {
                 	System.out.println("Connecting to the database...");
                     // Get a database connection and prepare a query statement
                     try (final Connection connection = DriverManager.getConnection(URL)) {
-                        try (final PreparedStatement statement = connection.prepareStatement(QUERY_TEMPLATE_1)) {
-                        	
-                        	// for each employee, execute query 1
+                        try (
+                            final PreparedStatement statement = connection.prepareStatement(QUERY_TEMPLATE_1)) {
                         	for (var emp : employees) {
-                                // Populate the query template with the data collected from the csv
-                            	//"EXEC ip_query1 @type = ?, @name = ?, @address = ?, @salary = ?, @product_type = ?, @max_products_per_day = ?, @technical_position = ?, @degrees = ?";
-//                                statement.setInt(1, type);
-//                                statement.setString(2, name);
-//                                statement.setString(3, address);
-//                                statement.setFloat(4, salary);
-//                                statement.setString(5, product_type);
-//                                statement.setInt(6, max_products_per_day);
-//                                statement.setString(7, technical_position); 
-//                                statement.setString(8, degrees);
-
-                                System.out.println("Dispatching the query...");
-                                // Actually execute the populated query
-                                final int rows_inserted = statement.executeUpdate();
-                                System.out.println(String.format("Done. %d rows inserted.", rows_inserted));
+                        		
                         	}
+                            // Populate the query template with the data collected from the csv
+                        	//"EXEC ip_query1 @type = ?, @name = ?, @address = ?, @salary = ?, @product_type = ?, @max_products_per_day = ?, @technical_position = ?, @degrees = ?";
+                            statement.setInt(1, type);
+                            statement.setString(2, name);
+                            statement.setString(3, address);
+                            statement.setFloat(4, salary);
+                            statement.setString(5, product_type);
+                            statement.setInt(6, max_products_per_day);
+                            statement.setString(7, technical_position); 
+                            statement.setString(8, degrees);
+
+                            System.out.println("Dispatching the query...");
+                            // Actually execute the populated query
+                            final int rows_inserted = statement.executeUpdate();
+                            System.out.println(String.format("Done. %d rows inserted.", rows_inserted));
                         }
                     }
                 }
