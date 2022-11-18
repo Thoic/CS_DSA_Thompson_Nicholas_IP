@@ -661,7 +661,9 @@ public class Thompson_Nicholas_IP_Task5b {
                 			 //add the employee hashmap to the employees list
                 			 employees.add(employee);
                 		 }
-                	}
+                	} catch(IOException e) {
+                        e.printStackTrace();
+                    }
                 	
                 	System.out.println("Connecting to the database...");
                     // Get a database connection and prepare a query statement
@@ -671,15 +673,15 @@ public class Thompson_Nicholas_IP_Task5b {
                         	// for each employee, execute query 1
                         	for (var emp : employees) {
                                 // Populate the query template with the data collected from the csv
-                            	//"EXEC ip_query1 @type = ?, @name = ?, @address = ?, @salary = ?, @product_type = ?, @max_products_per_day = ?, @technical_position = ?, @degrees = ?";
-//                                statement.setInt(1, type);
-//                                statement.setString(2, name);
-//                                statement.setString(3, address);
-//                                statement.setFloat(4, salary);
-//                                statement.setString(5, product_type);
-//                                statement.setInt(6, max_products_per_day);
-//                                statement.setString(7, technical_position); 
-//                                statement.setString(8, degrees);
+                                //"EXEC ip_query1 @type = ?, @name = ?, @address = ?, @salary = ?, @product_type = ?, @max_products_per_day = ?, @technical_position = ?, @degrees = ?";
+                                statement.setInt(1, (Integer) emp.get("type"));
+                                statement.setString(2, (String) emp.get("name"));
+                                statement.setString(3, (String) emp.get("address"));
+                                statement.setFloat(4, (Float) emp.get("salary"));
+                                statement.setString(5, (String) emp.get("product_type"));
+                                statement.setInt(6, (max_products_per_day));
+                                statement.setString(7, technical_position); 
+                                statement.setString(8, degrees);
 
                                 System.out.println("Dispatching the query...");
                                 // Actually execute the populated query
