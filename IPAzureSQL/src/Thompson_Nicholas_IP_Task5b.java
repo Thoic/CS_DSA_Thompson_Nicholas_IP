@@ -625,7 +625,7 @@ public class Thompson_Nicholas_IP_Task5b {
                 }
                 case "16": {// Import: enter new employees from a data file until the file is empty (the user must be asked to enter the input file name);
                 	System.out.println("NOTE: file must be a csv (delimited with semicolon) with the following attributes: type, name, address, salary, product_type, max_products_per_day, technical_position, degrees");
-                	System.out.println("NOTE: the file must include a value for all attributes, even if the employee doesn't use them (i.e. product_type for a worker).");
+                	System.out.println("NOTE: employee types are either 1) Quality Controller, 2) Worker, or 3) Technical Staff");
                 	System.out.println("Please enter the filename to read new employees from:");
                 	final String filename = sc.nextLine();
                 	
@@ -649,14 +649,23 @@ public class Thompson_Nicholas_IP_Task5b {
                 			 
                 			 //read employee attributes into a hashmap
                 			 HashMap<String, Object> employee = new HashMap<>();
-                			 employee.put("type", Integer.parseInt(values[0]));
+                			 final Integer type = Integer.parseInt(values[0]);
+                			 employee.put("type", type);
                 			 employee.put("name", values[1]);
                 			 employee.put("address", values[2]);
                 			 employee.put("salary", Float.parseFloat(values[3]));
-                			 employee.put("product_type", values[4]);
-                			 employee.put("max_products_per_day", Integer.parseInt(values[5]));
-                			 employee.put("technical_position", values[6]);
-                			 employee.put("degrees", values[7]);
+                			 
+                			 //employee specialization specific attributes
+                			 if (type == 1) { //quality controller
+                				 employee.put("product_type", values[4]);                				 
+                			 }
+                			 else if (type == 2) { //worker
+                				 employee.put("max_products_per_day", Integer.parseInt(values[4]));
+                				 
+                			 } else {//technical staff
+                				 employee.put("technical_position", values[4]);
+                				 employee.put("degrees", values[5]);                				 
+                			 }
                 			 
                 			 //add the employee hashmap to the employees list
                 			 employees.add(employee);
@@ -678,10 +687,11 @@ public class Thompson_Nicholas_IP_Task5b {
                                 statement.setString(2, (String) emp.get("name"));
                                 statement.setString(3, (String) emp.get("address"));
                                 statement.setFloat(4, (Float) emp.get("salary"));
-                                statement.setString(5, (String) emp.get("product_type"));
-                                statement.setInt(6, (max_products_per_day));
-                                statement.setString(7, technical_position); 
-                                statement.setString(8, degrees);
+                                statement.setString(5, (String) emp.getOrDefault("product_type", ""));
+                                statement.setInt(6, (Integer) emp.getOrDefault("max_products_per_day", -1));
+                                statement.setString(7, (String) emp.getOrDefault("technical_position", "")); 
+                                statement.setString(8, (String) emp.getOrDefault("degrees", ""));
+                                
 
                                 System.out.println("Dispatching the query...");
                                 // Actually execute the populated query
