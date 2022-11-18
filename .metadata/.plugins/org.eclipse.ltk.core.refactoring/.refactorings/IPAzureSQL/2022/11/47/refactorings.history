@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<session version="1.0">
+<refactoring comment="Rename resource &apos;IPAzureSQL/src/Thompson_Nicholas_IP_Task5b&apos; to &apos;Thompson_Nicholas_IP_Task5b.java&apos;" description="Rename resource &apos;Thompson_Nicholas_IP_Task5b&apos;" flags="7" id="org.eclipse.ltk.core.refactoring.rename.resource" input="src/Thompson_Nicholas_IP_Task5b" name="Thompson_Nicholas_IP_Task5b.java" stamp="1668361804106" updateReferences="true"/>
+</session>

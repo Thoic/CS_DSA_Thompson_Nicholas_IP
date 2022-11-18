@@ -1,0 +1,282 @@
+import java.sql.Connection;
+import java.sql.Statement;
+import java.util.Scanner;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+
+public class Thompson_Nicholas_IP_Task5b {
+
+    // Database credentials
+    final static String HOSTNAME = "thom0414-sql-server.database.windows.net";
+    final static String DBNAME = "cs-dsa-4513-sql-db";
+    final static String USERNAME = "thom0414";
+    final static String PASSWORD = "IHateSql!!!";
+
+    // Database connection string
+    final static String URL = String.format("jdbc:sqlserver://%s:1433;database=%s;user=%s;password=%s;encrypt=true;trustServerCertificate=false;hostNameInCertificate=*.database.windows.net;loginTimeout=30;",
+            HOSTNAME, DBNAME, USERNAME, PASSWORD);
+
+    // Query templates
+    final static String QUERY_TEMPLATE_1 = "EXEC ip_query1 @type = ?, @name = ?, @address = ?, @salary = ?, @product_type = ?, @max_products_per_day = ?, @technical_position = ?, @degrees = ?";
+
+    final static String QUERY_TEMPLATE_2 = "EXEC ip_query2 @type = ?, @product_id = ? @size = ?, @software_name = ?, @color = ?, @weight = ?, @wname = ?, @prod_date = ?, @prod_dur = ?, @qname = ?, @sname = ?, @repair_date = ?;";
+
+    // User input prompt//
+    final static String PROMPT = 
+            "\nWELCOME TO THE DATABASE SYSTEM OF MyProducts, Inc. \n" +
+            "(1) Enter a new employee; \n" + 
+            "(2) Enter a new product associated with the person who made the product, repaired the product if it is repaired, or checked the product; \n" + 
+            "(18) Quit.";
+
+    public static void main(String[] args) throws SQLException {
+
+        System.out.println("Welcome to the sample application!");
+
+        final Scanner sc = new Scanner(System.in); // Scanner is used to collect the user input
+        String option = ""; // Initialize user option selection as nothing
+        while (!option.equals("3")) { // As user for options until option 3 is selected
+            System.out.println(PROMPT); // Print the available options
+            option = sc.next(); // Read in the user option selection
+
+            switch (option) { // Switch between different options
+                case "1": {// Insert a new employee option
+                	// Select type of employee to insert
+                	System.out.println("Please select which type of employee to insert. \n" +
+                						"(1) Quality Controller \n" +
+                						"(2) Worker \n" +
+                						"(3) Technical Staff");
+                	final int type = sc.nextInt();
+                	
+                    // Collect the new employee data from the user
+                    System.out.println("Please enter the unique employee name:");
+                    // Preceding nextInt, nextFloar, etc. do not consume new line characters from the user input.
+                    // We call nextLine to consume that newline character, so that subsequent nextLine doesn't return nothing.
+                    sc.nextLine();
+                    final String name = sc.nextLine(); // Read in the user input of employee name
+
+                    System.out.println("Please enter the employee address:");
+                    final String address = sc.nextLine(); // Read in user input of employee address
+
+                    System.out.println("Please enter employee salary:");
+                    // No need to call nextLine extra time here, because the preceding nextLine consumed the newline character.
+                    final float salary = sc.nextFloat(); // Read in user input of employee salary
+                    sc.nextLine(); //consume newline
+
+                    //employee type is quality controller
+                    if (type == 1) {
+                    	System.out.println("Please enter the product type the employee will check:");
+                    	final String product_type = sc.nextLine(); //read qc product_type
+                    	
+                    	System.out.println("Connecting to the database...");
+                        // Get a database connection and prepare a query statement
+                        try (final Connection connection = DriverManager.getConnection(URL)) {
+                            try (
+                                final PreparedStatement statement = connection.prepareStatement(QUERY_TEMPLATE_1)) {
+                                // Populate the query template with the data collected from the user
+                                statement.setInt(1, type);
+                                statement.setString(2, name);
+                                statement.setString(3, address);
+                                statement.setFloat(4, salary);
+                                statement.setString(5, product_type);
+                                statement.setInt(6, 0); //0 or empty string for unused vals
+                                statement.setString(7, ""); 
+                                statement.setString(8, "");
+
+                                System.out.println("Dispatching the query...");
+                                // Actually execute the populated query
+                                final int rows_inserted = statement.executeUpdate();
+                                System.out.println(String.format("Done. %d rows inserted.", rows_inserted));
+                            }
+                        }
+                    } 
+                    //employee type is worker
+                    else if (type == 2) {
+                    	System.out.println("Please enter the maximum number of products the employee will make per day:");
+                    	final int max_products_per_day = sc.nextInt(); //read worker max_products
+                    	sc.nextLine();
+                    	
+                    	System.out.println("Connecting to the database...");
+                        // Get a database connection and prepare a query statement
+                        try (final Connection connection = DriverManager.getConnection(URL)) {
+                            try (
+                                final PreparedStatement statement = connection.prepareStatement(QUERY_TEMPLATE_1)) {
+                                // Populate the query template with the data collected from the user
+                            	statement.setInt(1, type);
+                                statement.setString(2, name);
+                                statement.setString(3, address);
+                                statement.setFloat(4, salary);
+                                statement.setString(5, "");
+                                statement.setInt(6, max_products_per_day);
+                                statement.setString(7, ""); 
+                                statement.setString(8, "");
+
+                                System.out.println("Dispatching the query...");
+                                // Actually execute the populated query
+                                final int rows_inserted = statement.executeUpdate();
+                                System.out.println(String.format("Done. %d rows inserted.", rows_inserted));
+                            }
+                        }
+                    }
+                    //employee type is technical staff
+                    else if (type == 3) {
+                    	System.out.println("Please enter the degree(s) the employee has obtained, if any, separated by commas (BS,MS,PhD):");
+                    	final String degrees = sc.nextLine();
+                    	System.out.println("Please enter the technical position of the employee:");
+                    	final String technical_position = sc.nextLine();
+                    	
+                    	System.out.println("Connecting to the database...");
+                        // Get a database connection and prepare a query statement
+                        try (final Connection connection = DriverManager.getConnection(URL)) {
+                            try (
+                                final PreparedStatement statement = connection.prepareStatement(QUERY_TEMPLATE_1)) {
+                                // Populate the query template with the data collected from the user
+                            	statement.setInt(1, type);
+                                statement.setString(2, name);
+                                statement.setString(3, address);
+                                statement.setFloat(4, salary);
+                                statement.setString(5, "");
+                                statement.setInt(6, 0);
+                                statement.setString(7, technical_position);
+                                statement.setString(8, degrees);
+
+                                System.out.println("Dispatching the query...");
+                                // Actually execute the populated query
+                                final int rows_inserted = statement.executeUpdate();
+                                System.out.println(String.format("Done. %d rows inserted.", rows_inserted));
+                            }
+                        }
+                    }
+
+                    
+
+                    break;
+                }
+                case "2": {
+                	// Select type of employee to insert
+                	System.out.println("Please select which type of employee to insert. \n" +
+                						"(1) Quality Controller \n" +
+                						"(2) Worker \n" +
+                						"(3) Technical Staff");
+                	final int type = sc.nextInt();
+                	
+                    // Collect the new employee data from the user
+                    System.out.println("Please enter the unique employee name:");
+                    // Preceding nextInt, nextFloar, etc. do not consume new line characters from the user input.
+                    // We call nextLine to consume that newline character, so that subsequent nextLine doesn't return nothing.
+                    sc.nextLine();
+                    final String name = sc.nextLine(); // Read in the user input of employee name
+
+                    System.out.println("Please enter the employee address:");
+                    final String address = sc.nextLine(); // Read in user input of employee address
+
+                    System.out.println("Please enter employee salary:");
+                    // No need to call nextLine extra time here, because the preceding nextLine consumed the newline character.
+                    final float salary = sc.nextFloat(); // Read in user input of employee salary
+                    sc.nextLine(); //consume newline
+
+                    //employee type is quality controller
+                    if (type == 1) {
+                    	System.out.println("Please enter the product type the employee will check:");
+                    	final String product_type = sc.nextLine(); //read qc product_type
+                    	
+                    	System.out.println("Connecting to the database...");
+                        // Get a database connection and prepare a query statement
+                        try (final Connection connection = DriverManager.getConnection(URL)) {
+                            try (
+                                final PreparedStatement statement = connection.prepareStatement(QUERY_TEMPLATE_1)) {
+                                // Populate the query template with the data collected from the user
+                                statement.setInt(1, type);
+                                statement.setString(2, name);
+                                statement.setString(3, address);
+                                statement.setFloat(4, salary);
+                                statement.setString(5, product_type);
+                                statement.setInt(6, 0); //0 or empty string for unused vals
+                                statement.setString(7, ""); 
+                                statement.setString(8, "");
+
+                                System.out.println("Dispatching the query...");
+                                // Actually execute the populated query
+                                final int rows_inserted = statement.executeUpdate();
+                                System.out.println(String.format("Done. %d rows inserted.", rows_inserted));
+                            }
+                        }
+                    } 
+                    //employee type is worker
+                    else if (type == 2) {
+                    	System.out.println("Please enter the maximum number of products the employee will make per day:");
+                    	final int max_products_per_day = sc.nextInt(); //read worker max_products
+                    	sc.nextLine();
+                    	
+                    	System.out.println("Connecting to the database...");
+                        // Get a database connection and prepare a query statement
+                        try (final Connection connection = DriverManager.getConnection(URL)) {
+                            try (
+                                final PreparedStatement statement = connection.prepareStatement(QUERY_TEMPLATE_1)) {
+                                // Populate the query template with the data collected from the user
+                            	statement.setInt(1, type);
+                                statement.setString(2, name);
+                                statement.setString(3, address);
+                                statement.setFloat(4, salary);
+                                statement.setString(5, "");
+                                statement.setInt(6, max_products_per_day);
+                                statement.setString(7, ""); 
+                                statement.setString(8, "");
+
+                                System.out.println("Dispatching the query...");
+                                // Actually execute the populated query
+                                final int rows_inserted = statement.executeUpdate();
+                                System.out.println(String.format("Done. %d rows inserted.", rows_inserted));
+                            }
+                        }
+                    }
+                    //employee type is technical staff
+                    else if (type == 3) {
+                    	System.out.println("Please enter the degree(s) the employee has obtained, if any, separated by commas (BS,MS,PhD):");
+                    	final String degrees = sc.nextLine();
+                    	System.out.println("Please enter the technical position of the employee:");
+                    	final String technical_position = sc.nextLine();
+                    	
+                    	System.out.println("Connecting to the database...");
+                        // Get a database connection and prepare a query statement
+                        try (final Connection connection = DriverManager.getConnection(URL)) {
+                            try (
+                                final PreparedStatement statement = connection.prepareStatement(QUERY_TEMPLATE_1)) {
+                                // Populate the query template with the data collected from the user
+                            	statement.setInt(1, type);
+                                statement.setString(2, name);
+                                statement.setString(3, address);
+                                statement.setFloat(4, salary);
+                                statement.setString(5, "");
+                                statement.setInt(6, 0);
+                                statement.setString(7, technical_position);
+                                statement.setString(8, degrees);
+
+                                System.out.println("Dispatching the query...");
+                                // Actually execute the populated query
+                                final int rows_inserted = statement.executeUpdate();
+                                System.out.println(String.format("Done. %d rows inserted.", rows_inserted));
+                            }
+                        }
+                    }
+
+                    
+
+                    break;
+                }
+                case "18": // Do nothing, the while loop will terminate upon the next iteration
+                    System.out.println("Exiting! Goodbye!");
+                    break;
+                default: // Unrecognized option, re-prompt the user for the correct one
+                    System.out.println(String.format(
+                        "Unrecognized option: %s\n" + 
+                        "Please try again!", 
+                        option));
+                    break;
+            }
+        }
+
+        sc.close(); // Close the scanner before exiting the application
+    }
+}
