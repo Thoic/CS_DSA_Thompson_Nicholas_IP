@@ -28,7 +28,8 @@ CREATE TABLE quality_controller(
     qname VARCHAR(64) PRIMARY KEY,
     address VARCHAR(64),
     salary DECIMAL(18,2),
-    product_type VARCHAR(64)
+    product_type VARCHAR(64),
+    CONSTRAINT CHK_type CHECK (product_type IN ('product1', 'product2', 'product3'))
 )
 CREATE INDEX quality_controller_salary_index on quality_controller(salary)
 
