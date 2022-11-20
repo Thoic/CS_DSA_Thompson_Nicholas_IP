@@ -3,7 +3,6 @@ DROP PROCEDURE IF EXISTS ip_query2
 DROP PROCEDURE IF EXISTS ip_query3
 DROP PROCEDURE IF EXISTS ip_query4
 DROP PROCEDURE IF EXISTS ip_query5
-DROP PROCEDURE IF EXISTS ip_query5_2
 DROP PROCEDURE IF EXISTS ip_query6
 DROP PROCEDURE IF EXISTS ip_query7
 DROP PROCEDURE IF EXISTS ip_query8
@@ -28,6 +27,15 @@ CREATE PROCEDURE ip_query1
     @degrees VARCHAR(64)
 AS
 BEGIN
+    --check if employee already exists (employees are total disjoint specialization: names are to be unique across qc, worker and technical staff)
+    IF @name IN (SELECT qname AS name FROM quality_controller UNION SELECT wname AS name FROM worker UNION SELECT sname AS name FROM technical_staff)
+    BEGIN
+        DECLARE @msg VARCHAR(64);
+        SET @msg = @name + ' is an existing employee name.';
+        THROW 50000, @msg, 1;
+    END;
+
+    --inser into qc, worker or technical staff based on given type
     IF @type = 1
         INSERT INTO quality_controller VALUES (@name, @address, @salary, @product_type);
     ELSE IF @type = 2
@@ -58,11 +66,18 @@ CREATE PROCEDURE ip_query2
     @complaint_id INT
 AS
 BEGIN
-    --check if worker can check the selected product type
+    --check if the qc can check the selected product type 
     DECLARE @msg VARCHAR(64);
     IF (SELECT product_type FROM quality_controller WHERE qname = @qname) != CONCAT('product', @type)
     BEGIN
         SET @msg = @qname + ' cannot check products of this type.';
+        THROW 50000, @msg, 1;
+    END;
+
+    --check if the technical staff can repair this product type (only graduates can repair product1)
+    IF @sname != '' AND (@type = 1 AND @sname NOT IN (SELECT DISTINCT sname FROM graduate_technical_staff))
+    BEGIN
+        SET @msg = @sname + ' cannot repair products of this type.';
         THROW 50000, @msg, 1;
     END;
 
@@ -86,9 +101,7 @@ BEGIN
     BEGIN
         INSERT INTO repairs VALUES (@product_id, @sname, @repair_date)
 
-        IF @complaint_id >= 0
-            INSERT INTO complaint_repair VALUES (@product_id, @complaint_id);
-        ELSE
+        IF @complaint_id <= 0
             INSERT INTO requests_repair VALUES (@product_id, @qname);
     END;
 END;

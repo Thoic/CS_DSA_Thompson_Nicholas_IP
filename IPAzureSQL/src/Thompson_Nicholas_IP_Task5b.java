@@ -1,16 +1,18 @@
 import java.io.BufferedReader;
-import java.io.File;
+import java.io.BufferedWriter;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.Date;
-import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.Scanner;
+
+import com.microsoft.sqlserver.jdbc.SQLServerException;
+
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.DriverManager;
@@ -35,9 +37,9 @@ public class Thompson_Nicholas_IP_Task5b {
     
     final static String QUERY_TEMPLATE_3 = "EXEC ip_query3 @cname = ?, @address = ?, @product_ids = ?";
     
-    final static String QUERY_TEMPLATE_4 = "EXEC ip_query4 @account_no = ?, @date_established = ?, @cost = ?, @product_id = ?, @date = ?";
+    final static String QUERY_TEMPLATE_4 = "EXEC ip_query4 @account_no = ?, @date_established = ?, @cost = ?, @product_id = ?";
     
-    final static String QUERY_TEMPLATE_5 = "EXEC ip_query5 @complaint_id = ?, @description = ?, @treatment_expected = ?";
+    final static String QUERY_TEMPLATE_5 = "EXEC ip_query5 @complaint_id = ?, @description = ?, @treatment_expected = ?, @product_id = ?, @date = ?";
     
     final static String QUERY_TEMPLATE_6 = "EXEC ip_query6 @accident_no = ?, @days_lost = ?, @product_id = ?, @date = ?";
     
@@ -80,6 +82,8 @@ public class Thompson_Nicholas_IP_Task5b {
             "(14) Retrieve the average cost of all products made in a particular year; \n" +
             "(15) Delete all accidents whose dates are in some range; \n" +
             "(16) Import: enter new employees from a data file until the file is empty (the user must be asked to enter the input file name); \n" +
+            "(17) Export: Retrieve all customers (in name order) who purchased all products of a particular color and output them to a datafile \n" +
+            "     instead of screen (the user must be asked to enter the output file name); \n" +
             "(18) Quit.";
 
     public static void main(String[] args) throws SQLException {
@@ -159,6 +163,8 @@ public class Thompson_Nicholas_IP_Task5b {
                             // Actually execute the populated query
                             final int rows_inserted = statement.executeUpdate();
                             System.out.println(String.format("Done. %d rows inserted.", rows_inserted));
+                        } catch (SQLServerException e) {
+                        	e.printStackTrace(); //print the stack trace of any sql errors
                         }
                     }
 
@@ -266,6 +272,9 @@ public class Thompson_Nicholas_IP_Task5b {
                             final int rows_inserted = statement.executeUpdate();
                             System.out.println(String.format("Done. %d rows inserted.", rows_inserted));
                         }
+                        catch (SQLServerException e) {
+                        	e.printStackTrace(); //print the stack trace of any sql errors
+                        }
                     }
 
                     break;
@@ -294,6 +303,8 @@ public class Thompson_Nicholas_IP_Task5b {
                             // Actually execute the populated query
                             final int rows_inserted = statement.executeUpdate();
                             System.out.println(String.format("Done. %d rows inserted.", rows_inserted));
+                        } catch (SQLServerException e) {
+                        	e.printStackTrace(); //print the stack trace of any sql errors
                         }
                     }
                 	break;
@@ -330,6 +341,8 @@ public class Thompson_Nicholas_IP_Task5b {
                             // Actually execute the populated query
                             final int rows_inserted = statement.executeUpdate();
                             System.out.println(String.format("Done. %d rows inserted.", rows_inserted));
+                        } catch (SQLServerException e) {
+                        	e.printStackTrace(); //print the stack trace of any sql errors
                         }
                     }
                 	break;
@@ -370,6 +383,8 @@ public class Thompson_Nicholas_IP_Task5b {
                             // Actually execute the populated query
                             final int rows_inserted = statement.executeUpdate();
                             System.out.println(String.format("Done. %d rows inserted.", rows_inserted));
+                        } catch (SQLServerException e) {
+                        	e.printStackTrace(); //print the stack trace of any sql errors
                         }
                     }
                 	break;
@@ -406,6 +421,8 @@ public class Thompson_Nicholas_IP_Task5b {
                             // Actually execute the populated query
                             final int rows_inserted = statement.executeUpdate();
                             System.out.println(String.format("Done. %d rows inserted.", rows_inserted));
+                        } catch (SQLServerException e) {
+                        	e.printStackTrace(); //print the stack trace of any sql errors
                         }
                     }
                 	break;
@@ -430,6 +447,8 @@ public class Thompson_Nicholas_IP_Task5b {
                             while (resultSet.next()) {
                             	System.out.println(String.format("%s | %s", resultSet.getString(1), resultSet.getString(2)));
                             }
+                        } catch (SQLServerException e) {
+                        	e.printStackTrace(); //print the stack trace of any sql errors
                         }
                     }
                 	break;
@@ -453,6 +472,8 @@ public class Thompson_Nicholas_IP_Task5b {
                             while (resultSet.next()) {
                             	System.out.println(String.format("%s", resultSet.getString(1)));
                             }
+                        } catch (SQLServerException e) {
+                        	e.printStackTrace(); //print the stack trace of any sql errors
                         }
                     }
                 	break;
@@ -477,6 +498,8 @@ public class Thompson_Nicholas_IP_Task5b {
                             while (resultSet.next()) {
                             	System.out.println(String.format("%s", resultSet.getString(1)));
                             }
+                        } catch (SQLServerException e) {
+                        	e.printStackTrace(); //print the stack trace of any sql errors
                         }
                     }
                 	break;
@@ -501,6 +524,8 @@ public class Thompson_Nicholas_IP_Task5b {
                             while (resultSet.next()) {
                             	System.out.println(String.format("%s", resultSet.getString(1)));
                             }
+                        } catch (SQLServerException e) {
+                        	e.printStackTrace(); //print the stack trace of any sql errors
                         }
                     }
                 	break;
@@ -524,6 +549,8 @@ public class Thompson_Nicholas_IP_Task5b {
                             while (resultSet.next()) {
                             	System.out.println(String.format("%s", resultSet.getString(1)));
                             }
+                        } catch (SQLServerException e) {
+                        	e.printStackTrace(); //print the stack trace of any sql errors
                         }
                     }
                 	break;
@@ -548,6 +575,8 @@ public class Thompson_Nicholas_IP_Task5b {
                             while (resultSet.next()) {
                             	System.out.println(String.format("%s", resultSet.getString(1)));
                             }
+                        } catch (SQLServerException e) {
+                        	e.printStackTrace(); //print the stack trace of any sql errors
                         }
                     }
                 	break;
@@ -568,6 +597,8 @@ public class Thompson_Nicholas_IP_Task5b {
                             while (resultSet.next()) {
                             	System.out.println(String.format("%s", resultSet.getString(1)));
                             }
+                        } catch (SQLServerException e) {
+                        	e.printStackTrace(); //print the stack trace of any sql errors
                         }
                     }
                 	break;                	
@@ -592,6 +623,8 @@ public class Thompson_Nicholas_IP_Task5b {
                             while (resultSet.next()) {
                             	System.out.println(String.format("%s", resultSet.getString(1)));
                             }
+                        } catch (SQLServerException e) {
+                        	e.printStackTrace(); //print the stack trace of any sql errors
                         }
                     }
                 	break;
@@ -619,20 +652,22 @@ public class Thompson_Nicholas_IP_Task5b {
                             // Actually execute the populated query
                             final int rows_updated = statement.executeUpdate();
                             System.out.println(String.format("Done. %d rows updated.", rows_updated));
+                        } catch (SQLServerException e) {
+                        	e.printStackTrace(); //print the stack trace of any sql errors
                         }
                     }
                 	break;
                 }
                 case "16": {// Import: enter new employees from a data file until the file is empty (the user must be asked to enter the input file name);
-                	System.out.println("NOTE: file must be a csv (delimited with semicolon) with the following attributes: type, name, address, salary, product_type, max_products_per_day, technical_position, degrees");
-                	System.out.println("NOTE: employee types are either 1) Quality Controller, 2) Worker, or 3) Technical Staff");
+                	System.out.println("NOTE: file must be a csv (delimited with semicolon) with the following attributes (depending on the type of employee): \n"
+                			+ "Quality Controller: 1; <name>; <address>; <salary>; <product_type>;\n"
+                			+ "Worker: 2; <name>; <address>; <salary>; <max_products_per_day>;\n"
+                			+ "Technical Staff: 3; <name>; <address>; <salary>; <technical_position>; <degrees>;");
                 	System.out.println("Please enter the filename to read new employees from:");
                 	final String filename = sc.nextLine();
                 	
                 	//if the given filename doesnt have the extension csv; break
-                	if (!Optional.ofNullable(filename)
-                		      .filter(f -> f.contains("."))
-                		      .map(f -> f.substring(filename.lastIndexOf(".") + 1)).equals("csv")) {
+                	if (!filename.substring(filename.lastIndexOf(".") + 1).equals("csv")) {
                 		System.out.println("Error: given file is not a csv.");
                 		break;
                 	}
@@ -645,7 +680,7 @@ public class Thompson_Nicholas_IP_Task5b {
                 		//temp variable for the line being parsed
                 		String line;
                 		 while ((line = bufferedReader.readLine()) != null) {
-                			 String[] values = line.split(","); //split the line by comma
+                			 String[] values = line.split(";"); //split the line by semicolon
                 			 
                 			 //read employee attributes into a hashmap
                 			 HashMap<String, Object> employee = new HashMap<>();
@@ -672,6 +707,7 @@ public class Thompson_Nicholas_IP_Task5b {
                 		 }
                 	} catch(IOException e) {
                         e.printStackTrace();
+                        break;//file not found, end 
                     }
                 	
                 	System.out.println("Connecting to the database...");
@@ -698,8 +734,45 @@ public class Thompson_Nicholas_IP_Task5b {
                                 final int rows_inserted = statement.executeUpdate();
                                 System.out.println(String.format("Done. %d rows inserted.", rows_inserted));
                         	}
+                        } catch (SQLServerException e) {
+                        	e.printStackTrace(); //print the stack trace of any sql errors
                         }
                     }
+                    break;
+                }
+                case "17": { //export customers to file
+                	System.out.println("Please enter the filename for the exported data:");
+                	final String filename = sc.nextLine();
+                	
+                	//open a bufferedwriter for the output file
+                	try (BufferedWriter bw = new BufferedWriter(new FileWriter(filename))) {
+                		
+                		System.out.println("Please enter the color to check:");
+                    	final String color = sc.nextLine();//read the color from the user
+                    	
+                    	System.out.println("Connecting to the database...");
+                        // Get a database connection and prepare a query statement
+                        try (final Connection connection = DriverManager.getConnection(URL)) {
+                            try (
+                                final PreparedStatement statement = connection.prepareStatement(QUERY_TEMPLATE_11)) {
+                                // Populate the query template with the data collected from the user
+                                statement.setString(1, color);
+
+                                System.out.println("Dispatching the query...");
+                                // Actually execute the populated query
+                                final ResultSet resultSet = statement.executeQuery();
+                                while (resultSet.next()) {//for each item in the result set, write to file
+                                	bw.write(String.format("%s\n", resultSet.getString(1)));
+                                }
+                            } catch (SQLServerException e) {
+                            	e.printStackTrace(); //print the stack trace of any sql errors
+                            }
+                        }
+                	} catch (IOException e) {
+                		e.printStackTrace();
+                		break;
+                	}
+                	break;
                 }
                 case "18": // Do nothing, the while loop will terminate upon the next iteration
                     System.out.println("Exiting! Goodbye!");
