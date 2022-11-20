@@ -52,12 +52,14 @@ CREATE TABLE graduate_technical_staff(
     sname VARCHAR(64),
     degree VARCHAR(64),
     CONSTRAINT PK_graduate_technical_staff PRIMARY KEY(sname, degree),
-    CONSTRAINT FK_sname FOREIGN KEY (sname) REFERENCES technical_staff
+    CONSTRAINT FK_sname FOREIGN KEY (sname) REFERENCES technical_staff,
+    CONSTRAINT CHK_degree CHECK (degree IN ('BS', 'MS', 'PhD')) --check taht the degree name is BS, MS or PhD
 )
 
 CREATE TABLE product(
     product_id INT PRIMARY KEY,
-    size VARCHAR(8)
+    size VARCHAR(8),
+    CONSTRAINT CHK_size CHECK (size IN ('small', 'medium', 'large')) --product can only be small, medium or large
 )
 
 CREATE TABLE product1(

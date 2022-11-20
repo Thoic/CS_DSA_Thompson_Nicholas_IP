@@ -27,10 +27,10 @@ CREATE PROCEDURE ip_query1
     @degrees VARCHAR(64)
 AS
 BEGIN
-    --check if employee already exists (employees are total disjoint specialization: names are to be unique across qc, worker and technical staff)
-    IF @name IN (SELECT qname AS name FROM quality_controller UNION SELECT wname AS name FROM worker UNION SELECT sname AS name FROM technical_staff)
+    --check that name has not already been added to another employee table
+    DECLARE @msg VARCHAR(64);
+    IF (@name IN ((SELECT qname AS name FROM quality_controller) UNION (SELECT wname AS name FROM worker) UNION (SELECT sname AS name FROM technical_staff)))
     BEGIN
-        DECLARE @msg VARCHAR(64);
         SET @msg = @name + ' is an existing employee name.';
         THROW 50000, @msg, 1;
     END;
@@ -78,13 +78,6 @@ BEGIN
     IF @sname != '' AND (@type = 1 AND @sname NOT IN (SELECT DISTINCT sname FROM graduate_technical_staff))
     BEGIN
         SET @msg = @sname + ' cannot repair products of this type.';
-        THROW 50000, @msg, 1;
-    END;
-
-    --check if size is small, medium, or large
-    IF NOT (@size != 'small' OR @size != 'medium' OR @size != 'large')
-    BEGIN
-        SET @msg = @size + ' is not a valid size of product.';
         THROW 50000, @msg, 1;
     END;
 
